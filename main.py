@@ -1,10 +1,9 @@
 from ursina import *
-from ursina.prefabs.platformer_controller_2d import PlatformerController2d
+from player import *
 
 app = Ursina()
 
-player = PlatformerController2d(y=1, z=-.01, scale_y=1, max_jumps=1)
-ground = Entity(model='quad', scale_x=10, collider='box', color=color.white)
+player = Player()
 quad = load_model('quad', use_deepcopy=True)
 level_parent = Entity(model=Mesh(vertices=[], uvs=[]), texture='white_cube')
 
@@ -35,10 +34,7 @@ def make_level(texture):
 
 make_level(load_texture('./assets/level'))
 
-camera.orthographic = True
-camera.position = (30/2,8)
-camera.fov = 16
-
 player.traverse_target = level_parent
+camera.add_script(SmoothFollow(target=player, offset=[0,1,-30], speed=4))
 
 app.run()
